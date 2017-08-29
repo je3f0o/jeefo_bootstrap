@@ -57,7 +57,7 @@ invoke_change_detector = function (component) {
 };
 
 while (i--) {
-	state_service.register(states[i]);
+	state_service.register(require(states[i]));
 }
 
 //zone.on_enter = function () { console.log("ENTER"); };
