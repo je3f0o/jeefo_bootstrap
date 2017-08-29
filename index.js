@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : index.js
 * Created at  : 2017-07-16
-* Updated at  : 2017-08-29
+* Updated at  : 2017-08-30
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -57,7 +57,7 @@ invoke_change_detector = function (component) {
 };
 
 while (i--) {
-	state_service.register(states[i].name, require(states[i].path));
+	state_service.register(states[i]);
 }
 
 //zone.on_enter = function () { console.log("ENTER"); };
