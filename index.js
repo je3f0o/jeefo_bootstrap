@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : index.js
 * Created at  : 2017-07-16
-* Updated at  : 2017-08-30
+* Updated at  : 2017-09-17
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -21,38 +21,35 @@ var zone             = require("jeefo/zone"),
 	original_timeout = zone.get_original("window", "setTimeout"),
 	i = states.length, timeout_id,
 
-invoke_change_detector = function (component) {
-	var i = component.change_detectors.length, is_changed;
-	while (i--) {
-		if (component.change_detectors[i].is_changed()) {
-			is_changed = true;
-		}
-	}
+_invoke_change_detector = function (instance) {
+	if (instance.controller) {
+		var i = 0, is_changed;
 
-	if (component.controller) {
-		if (component.controller.on_digest) {
-			component.controller.on_digest();
-		} else if (is_changed && component.controller.on_change) {
-			component.controller.on_change();
-		}
-	}
-
-	i = component.directives.length;
-	while (i--) {
-		if (component.directives[i].controller) {
-			if (component.directives[i].controller.on_digest) {
-				component.directives[i].controller.on_digest();
-			} else if (is_changed && component.directives[i].controller.on_change) {
-				component.directives[i].controller.on_change();
+		for (; i < instance.change_detectors.length; ++i) {
+			if (instance.change_detectors[i].is_changed()) {
+				is_changed = true;
 			}
 		}
+
+		if (instance.controller.on_digest) {
+			instance.controller.on_digest();
+		}
+		if (is_changed && instance.controller.on_change) {
+			instance.controller.on_change();
+		}
+	}
+},
+
+invoke_change_detector = function (component) {
+	_invoke_change_detector(component);
+
+	var i = 0;
+	for (; i < component.directives.length; ++i) {
+		_invoke_change_detector(component.directives[i]);
 	}
 
-	if (component.children) {
-		i = component.children.length;
-		while (i--) {
-			invoke_change_detector(component.children[i]);
-		}
+	for (i = 0; i < component.children.length; ++i) {
+		invoke_change_detector(component.children[i]);
 	}
 };
 
