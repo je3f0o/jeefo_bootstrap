@@ -1,12 +1,13 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : index.js
 * Created at  : 2017-07-16
-* Updated at  : 2017-09-17
+* Updated at  : 2017-09-28
 * Author      : jeefo
 * Purpose     :
 * Description :
 _._._._._._._._._._._._._._._._._._._._._.*/
 // ignore:start
+"use strict";
 
 /* globals */
 /* exported */
@@ -16,7 +17,7 @@ _._._._._._._._._._._._._._._._._._._._._.*/
 var zone             = require("jeefo/zone"),
 	root             = { children : [], directives : [], change_detectors : [] },
 	states           = require("states"),
-	state_service    = require("jeefo/router/state_service"),
+	state_service    = require("jeefo/router/services/state_service"),
 	compile_element  = require("jeefo/component/compiler/element"),
 	original_timeout = zone.get_original("window", "setTimeout"),
 	i = states.length, timeout_id,
@@ -78,8 +79,7 @@ module.exports = function bootstrap (element) {
 		compile_element(element, root);
 
 		zone.run(function () {
-			//state.go("/app/zzz/tttt2/tttt3");
-			state_service.go("/");
+			state_service.initialize();
 		});
 	});
 };
